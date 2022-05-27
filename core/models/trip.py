@@ -40,11 +40,17 @@ class Trip:
     def get_coordinator(self):
         return self.__coordinator
 
+    def set_travellers(self, travellers):
+        self.__travellers = travellers
+
     def add_traveller(self, traveller):
         self.__travellers.append(traveller)
 
     def get_travellers(self):
         return self.__travellers
+
+    def set_tip_legs(self, tip_legs):
+        self.__tip_legs = tip_legs
 
     def add_tip_leg(self, tip_legs):
         self.__tip_legs.append(tip_legs)
