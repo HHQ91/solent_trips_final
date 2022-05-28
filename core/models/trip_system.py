@@ -19,7 +19,7 @@ class TripSystem:
     def get_trips(self):
         return self.__trips
 
-    def add_trip(self, name, duration, start_date, coordinator, travellers, tip_legs, passengers):
+    def add_trip(self, name, duration, start_date, coordinator, travellers, tip_legs):
         self.__accepted_role(RoleTypes.manager)
         trip = Trip()
         trip.set_name(name)
@@ -28,11 +28,10 @@ class TripSystem:
         trip.set_coordinator(coordinator)
         trip.set_travellers(travellers)
         trip.set_tip_legs(tip_legs)
-        trip.set_passengers(passengers)
         # add the new trip
         self.__trips.append(trip)
 
-    def update_trip(self, id, name, duration, start_date, coordinator, travellers, tip_legs, passengers):
+    def update_trip(self, id, name, duration, start_date, coordinator, travellers, tip_legs):
         self.__accepted_role(RoleTypes.manager)
         for i, item in self.__trips:
             if item.get_id() == id:
@@ -48,8 +47,6 @@ class TripSystem:
                     self.__trips[i].set_travellers(travellers)
                 if tip_legs is not None:
                     self.__trips[i].set_tip_legs(tip_legs)
-                if passengers is not None:
-                    self.__trips[i].set_passengers(passengers)
                 break
 
     def delete_trip(self, id):
