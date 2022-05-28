@@ -8,13 +8,12 @@ class TripSystem:
     __users = []
     __logged_in_user = None
 
-    def __init__(self, username, password):
+    def __init__(self):
         # add system users
         self.__users.append(User("TripCoordinator", "12345", RoleTypes.coordinator))
         self.__users.append(User("TripManager", "12345", RoleTypes.manager))
         self.__users.append(User("TripAdmin", "12345", RoleTypes.administrator))
         # log the user in
-        self.__logging_in(username, password)
 
     def get_trips(self):
         trips = []
@@ -62,7 +61,7 @@ class TripSystem:
             if item.get_id() == id:
                 self.__trips.remove(item)
 
-    def __logging_in(self, username, password):
+    def logging_in(self, username, password):
         for i, user in self.__users:
             if user.get_name() == username and user.get_password() == password:
                 self.__logged_in_user = user

@@ -9,6 +9,7 @@ class Traveller:
     __contact = None
     __government_id = None
     __government_id_Type = None  # passport, driving license, national identity card, etc.
+    __payments = []
 
     def __init__(self):
         self.__id = uuid.uuid4()
@@ -51,3 +52,12 @@ class Traveller:
 
     def get_government_id_type(self):
         return self.__government_id_Type
+
+    def set_payments(self, payments):
+        self.__payments = payments
+
+    def add_payment(self, payment):
+        self.__payments.append(payment)
+
+    def get_payments(self):
+        return self.__payments

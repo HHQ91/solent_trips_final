@@ -52,8 +52,8 @@ class Trip:
     def set_tip_legs(self, tip_legs):
         self.__tip_legs = tip_legs
 
-    def add_tip_leg(self, tip_legs):
-        self.__tip_legs.append(tip_legs)
+    def add_tip_leg(self, tip_leg):
+        self.__tip_legs.append(tip_leg)
 
     def get_tip_legs(self):
         return self.__tip_legs
