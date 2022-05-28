@@ -19,7 +19,8 @@ class TripSystem:
     def get_trips(self):
         return self.__trips
 
-    def add_trip(self, name, duration, start_date, coordinator, travellers, tip_legs):
+    def add_trip(self, name, duration, start_date, coordinator, travellers, tip_legs, passengers):
+        self.__accepted_role(RoleTypes.manager)
         trip = Trip()
         trip.set_name(name)
         trip.set_duration(duration)
@@ -27,10 +28,12 @@ class TripSystem:
         trip.set_coordinator(coordinator)
         trip.set_travellers(travellers)
         trip.set_tip_legs(tip_legs)
+        trip.set_passengers(passengers)
         # add the new trip
         self.__trips.append(trip)
 
-    def update_trip(self, id, name, duration, start_date, coordinator, travellers, tip_legs):
+    def update_trip(self, id, name, duration, start_date, coordinator, travellers, tip_legs, passengers):
+        self.__accepted_role(RoleTypes.manager)
         for i, item in self.__trips:
             if item.get_id() == id:
                 if name is not None:
@@ -45,9 +48,12 @@ class TripSystem:
                     self.__trips[i].set_travellers(travellers)
                 if tip_legs is not None:
                     self.__trips[i].set_tip_legs(tip_legs)
+                if passengers is not None:
+                    self.__trips[i].set_passengers(passengers)
                 break
 
     def delete_trip(self, id):
+        self.__accepted_role(RoleTypes.manager)
         for i, item in self.__trips:
             if item.get_id() == id:
                 self.__trips.remove(item)
@@ -60,3 +66,15 @@ class TripSystem:
         # if logged-in user still null then throw an exception
         if self.__logged_in_user is None:
             raise Exception("Please use a valid account")
+
+    # logged in accepted role to perform the action
+    def __accepted_role(self, role):
+        if role is RoleTypes.coordinator:
+            return
+        if role is RoleTypes.manager and (self.__logged_in_user.get_role() is RoleTypes.manager or
+                                          self.__logged_in_user.get_role() is RoleTypes.administrator):
+            return
+        if role is RoleTypes.administrator and self.__logged_in_user.get_role() is RoleTypes.administrator:
+            return
+
+        raise Exception("Not allowed to perform this action")

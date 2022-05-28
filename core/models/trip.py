@@ -9,6 +9,7 @@ class Trip:
     __coordinator = None
     __travellers = []
     __tip_legs = []
+    __passengers = []
 
     def __init__(self):
         self.__id = uuid.uuid4()
@@ -57,3 +58,12 @@ class Trip:
 
     def get_tip_legs(self):
         return self.__tip_legs
+
+    def set_passengers(self, passengers):
+        self.__passengers = passengers
+
+    def add_passenger(self, passenger):
+        self.__passengers.append(passenger)
+
+    def get_passengers(self):
+        return self.__passengers
