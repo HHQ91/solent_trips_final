@@ -3,34 +3,24 @@ from tkinter import Tk
 
 from core.gui.login_gui import LoginGUI
 from core.gui.trips_gui import TripsGUI
+from core.models.traveller import Traveller
 from core.models.trip import Trip
+from core.models.trip_leg import TripLeg
 from core.models.user import User
 from core.types.duration_types import DurationTypes
 from core.types.role_types import RoleTypes
+from core.types.trasport_mode_types import TransportModeTypes
 
 
 class TripSystem:
     trips = []
     users = []
+    travellers = []
     logged_in_user = None
     app_name = "Trips Management System"
 
     def __init__(self):
-        # add system users
-        self.users.append(User("coordinator1", "12345", RoleTypes.coordinator))
-        self.users.append(User("coordinator2", "12345", RoleTypes.coordinator))
-        self.users.append(User("coordinator3", "12345", RoleTypes.coordinator))
-        self.users.append(User("manager", "12345", RoleTypes.manager))
-        self.users.append(User("a", "a", RoleTypes.administrator))
-        # add demo trip
-        demo_trip1 = Trip("Trip to turkey", datetime.now(), DurationTypes.weekend, self.users[0], None, None)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
+        self.__add_demo_data()
         # initial the tkinter
         self.root = Tk()
         self.root.wm_title(self.app_name)
@@ -101,3 +91,22 @@ class TripSystem:
             return
 
         raise Exception("Not allowed to perform this action")
+
+    def __add_demo_data(self):
+        # add system users
+        self.users.append(User("coordinator1", "12345", RoleTypes.coordinator))
+        self.users.append(User("coordinator2", "12345", RoleTypes.coordinator))
+        self.users.append(User("coordinator3", "12345", RoleTypes.coordinator))
+        self.users.append(User("manager", "12345", RoleTypes.manager))
+        self.users.append(User("a", "a", RoleTypes.administrator))
+        # add demo trip
+        demo_trip1 = Trip("Trip to turkey", datetime.now(), DurationTypes.weekend, self.users[0], None, None)
+        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip1)
+
+
