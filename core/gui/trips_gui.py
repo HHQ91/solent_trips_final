@@ -47,10 +47,9 @@ class TripsGUI():
             i[1].destroy()
             i[2].destroy()
 
-    def update_trip_info(self, trip):
+    def update_trips_info(self):
         self.__remove_all_trips_info()
         self.__add_trips_info()
-
 
     def __open_update_trip(self, trip):
         self.update_trip_gui = TripGUI(self, trip)

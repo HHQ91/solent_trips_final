@@ -76,7 +76,7 @@ class TripGUI():
                     self.trips_gui.trip_system.trips[i].coordinator = self.trip.coordinator
                     self.trips_gui.trip_system.trips[i].travellers = self.trip.travellers
                     self.trips_gui.trip_system.trips[i].trip_legs = self.trip.trip_legs
-                    self.trips_gui.update_trip_info(self.trip)
+                    self.trips_gui.update_trips_info()
 
         else:
             self.trips_gui.trip_system.trips.append(self.trip)
