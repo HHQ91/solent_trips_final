@@ -5,6 +5,7 @@ from tkcalendar import DateEntry
 
 from core.models.trip import Trip
 from core.types.duration_types import DurationTypes
+from core.types.role_types import RoleTypes
 
 
 class AddNewTripGUI():
@@ -20,14 +21,18 @@ class AddNewTripGUI():
         self.__add_duration_entry()
         self.__add_start_date_label()
         self.__add_start_date_entry()
+        self.__add_coordinator_label()
+        self.__add_coordinator_entry()
         self.__add_save_button()
 
     def __save(self):
+        coordinator = [x for x in self.trips_gui.trip_system.users if self.coordinator_entry.get() in x.name][0]
         trip = Trip(
             self.name_entry.get(),
             self.start_date_entry.get(),
             DurationTypes[self.duration_entry.get()],
-            None, None, None)
+            coordinator,
+            None, None)
         print(trip.duration)
         self.trips_gui.trip_system.trips.append(trip)
         self.trips_gui.add_trip_info(trip)
@@ -63,4 +68,14 @@ class AddNewTripGUI():
 
     def __add_save_button(self):
         self.save_button = Button(self.master, text="Save", command=self.__save)
-        self.save_button.grid(row=3, column=1)
+        self.save_button.grid(row=4, column=1)
+
+    def __add_coordinator_label(self):
+        self.coordinator_label = Label(self.master)
+        self.coordinator_label.grid(row=3, column=0, pady=5)
+        self.coordinator_label.configure(text="Coordinator:")
+
+    def __add_coordinator_entry(self):
+        self.coordinator_entry = Combobox(self.master)
+        self.coordinator_entry.grid(row=3, column=1)
+        self.coordinator_entry["values"] = [x.name for x in self.trips_gui.trip_system.users if x.role is RoleTypes.coordinator]

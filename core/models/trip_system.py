@@ -17,7 +17,9 @@ class TripSystem:
 
     def __init__(self):
         # add system users
-        self.users.append(User("coordinator", "12345", RoleTypes.coordinator))
+        self.users.append(User("coordinator1", "12345", RoleTypes.coordinator))
+        self.users.append(User("coordinator2", "12345", RoleTypes.coordinator))
+        self.users.append(User("coordinator3", "12345", RoleTypes.coordinator))
         self.users.append(User("manager", "12345", RoleTypes.manager))
         self.users.append(User("a", "a", RoleTypes.administrator))
         # add demo trip
@@ -56,7 +58,7 @@ class TripSystem:
     def update_trip(self, id, name, duration, start_date, coordinator, travellers, trip_legs):
         self.__accepted_role_or_throw_exception(RoleTypes.manager)
         for i, item in self.trips:
-            if item.get_id() == id:
+            if item.id == id:
                 if name is not None:
                     self.trips[i].name = name
                 if duration is not None:
@@ -67,7 +69,7 @@ class TripSystem:
                     self.trips[i].coordinator = coordinator
                 if travellers is not None:
                     self.trips[i].travellers = travellers
-                if tip_legs is not None:
+                if trip_legs is not None:
                     self.trips[i].trip_legs = trip_legs
                 break
 
@@ -79,7 +81,7 @@ class TripSystem:
 
     def logging_in(self, username, password):
         for user in self.users:
-            if user.get_name() == username and user.get_password() == password:
+            if user.name == username and user.password == password:
                 self.logged_in_user = user
                 self.login_gui.__del__()
                 self.trips_gui = TripsGUI(self.root, self)

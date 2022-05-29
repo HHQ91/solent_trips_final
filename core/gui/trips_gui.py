@@ -28,7 +28,7 @@ class TripsGUI():
 
     def add_trip_info(self, trip):
         Separator(orient='horizontal').pack(fill='x')
-        trip_info = f"Trip: {trip.name}, duration: {trip.duration.name}, start in: {trip.start_date}"
+        trip_info = f"Trip: {trip.name}, duration: {trip.duration.name}, start in: {trip.start_date}, coordinator: {trip.coordinator.name}"
         trip_name_label = Label()
         trip_name_label.pack()
         trip_name_label.configure(text=trip_info)
