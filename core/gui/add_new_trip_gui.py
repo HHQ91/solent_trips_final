@@ -1,8 +1,9 @@
-from tkinter import Toplevel, Label, Button, Listbox, END, Scrollbar, RIGHT, Y
+from tkinter import Toplevel, Label, Button, Listbox, END, Scrollbar, RIGHT, Y, messagebox
 from tkinter.ttk import Entry, Combobox
 
 from tkcalendar import DateEntry
 
+from core.gui.add_new_coordinator_gui import AddNewCoordinatorGUI
 from core.gui.add_new_traveller_gui import AddNewTravellerGUI
 from core.gui.add_new_trip_leg_gui import AddNewTripLegGUI
 from core.models.trip import Trip
@@ -26,6 +27,8 @@ class AddNewTripGUI():
         self.__add_coordinator_entry()
         self.__add_coordinator_label()
         self.__add_coordinator_entry()
+        self.__add_new_coordinator_button()
+        self.__add_remove_coordinator_button()
         self.__add_travellers_label()
         self.__add_travellers_entry()
         self.__add_new_traveller_button()
@@ -37,16 +40,23 @@ class AddNewTripGUI():
         self.__add_save_button()
 
     def __save(self):
-        # get coordinator
-        coordinator = [x for x in self.trips_gui.trip_system.users if self.coordinator_entry.get() in x.name][0]
 
         # save new trip
         self.trip.name = self.name_entry.get()
+        if not self.trip.name:
+            return messagebox.showerror("Add Failed", "please enter a valid name")
+
         self.trip.start_date = self.start_date_entry.get()
+
         self.trip.duration = DurationTypes[self.duration_entry.get()]
+        if not self.trip.duration:
+            return messagebox.showerror("Add Failed", "Please select a valid duration")
+        # get coordinator
+        if len(self.coordinator_entry.curselection()) <= 0:
+            return messagebox.showerror("Add Failed", "Please select a valid coordinator")
+        coordinator = [x for x in self.trips_gui.trip_system.users if
+                       self.coordinator_entry.get(self.coordinator_entry.curselection()[0]) in x.name][0]
         self.trip.coordinator = coordinator
-        print(self.trip.trip_legs)
-        print(self.trip.travellers)
         self.trips_gui.trip_system.trips.append(self.trip)
         self.trips_gui.add_trip_info(self.trip)
         self.master.destroy()
@@ -85,33 +95,35 @@ class AddNewTripGUI():
 
     def __add_coordinator_label(self):
         self.coordinator_label = Label(self.master)
-        self.coordinator_label.grid(row=3, column=0, pady=5)
+        self.coordinator_label.grid(row=3, column=0, pady=5, rowspan=2)
         self.coordinator_label.configure(text="Coordinator:")
 
     def __add_coordinator_entry(self):
-        self.coordinator_entry = Combobox(self.master)
-        self.coordinator_entry.grid(row=3, column=1)
-        self.coordinator_entry["values"] = [x.name for x in self.trips_gui.trip_system.users if
-                                            x.role is RoleTypes.coordinator]
+        self.coordinator_entry = Listbox(self.master, selectmode="single", exportselection=False)
+        self.coordinator_entry.grid(row=3, column=1, pady=5, rowspan=2)
+        for user in self.trips_gui.trip_system.users:
+            if user.role is RoleTypes.coordinator:
+                self.coordinator_entry.insert(END, user.name)
 
     def __add_travellers_label(self):
         self.travellers_label = Label(self.master)
-        self.travellers_label.grid(row=4, column=0, pady=5, rowspan=2)
+        self.travellers_label.grid(row=5, column=0, pady=5, rowspan=2)
         self.travellers_label.configure(text="Travellers:")
 
     def __add_travellers_entry(self):
         self.travellers_entry = Listbox(self.master, selectmode="multiple", exportselection=False)
-        self.travellers_entry.grid(row=4, column=1, pady=5, rowspan=2)
+        self.travellers_entry.grid(row=5, column=1, pady=5, rowspan=2)
         for traveller in self.trip.travellers:
             self.travellers_entry.insert(END, traveller.name)
 
     def __add_new_traveller_button(self):
-        self.save_button = Button(self.master, text="Add New", command=self.__open_add_new_traveller)
-        self.save_button.grid(row=4, column=2)
+        self.add_new_traveller_button = Button(self.master, text="Add New", command=self.__open_add_new_traveller)
+        self.add_new_traveller_button.grid(row=5, column=2)
 
     def __remove_selected_traveller_button(self):
-        self.save_button = Button(self.master, text="Remove Selected", command=self.__remove_selected_traveller)
-        self.save_button.grid(row=5, column=2)
+        self.remove_selected_traveller_button = Button(self.master, text="Remove Selected",
+                                                       command=self.__remove_selected_traveller)
+        self.remove_selected_traveller_button.grid(row=6, column=2)
 
     def __open_add_new_traveller(self):
         self.add_new_traveller_gui = AddNewTravellerGUI(self)
@@ -124,25 +136,26 @@ class AddNewTripGUI():
 
     def __add_trip_legs_label(self):
         self.trip_legs_label = Label(self.master)
-        self.trip_legs_label.grid(row=6, column=0, pady=5, rowspan=2)
+        self.trip_legs_label.grid(row=7, column=0, pady=5, rowspan=2)
         self.trip_legs_label.configure(text="Trip Legs:")
 
     def __add_trip_legs_entry(self):
         self.trip_legs_entry = Listbox(self.master, selectmode="multiple", exportselection=False)
-        self.trip_legs_entry.grid(row=6, column=1, pady=5, rowspan=2)
+        self.trip_legs_entry.grid(row=7, column=1, pady=5, rowspan=2)
         for trip_leg in self.trip.trip_legs:
             self.trip_legs_entry.insert(END, trip_leg.destination)
 
     def __add_new_trip_legs_button(self):
-        self.save_button = Button(self.master, text="Add New", command=self.__open_add_new_trip_leg)
-        self.save_button.grid(row=6, column=2)
+        self.add_new_trip_legs_button = Button(self.master, text="Add New", command=self.__open_add_new_trip_leg)
+        self.add_new_trip_legs_button.grid(row=7, column=2)
 
     def __open_add_new_trip_leg(self):
-        self.__open_add_new_trip_leg_gui = AddNewTripLegGUI(self)
+        self.dd_new_trip_leg_gui = AddNewTripLegGUI(self)
 
     def __remove_selected_trip_legs_button(self):
-        self.save_button = Button(self.master, text="Remove Selected", command=self.__remove_selected_trip_leg)
-        self.save_button.grid(row=7, column=2)
+        self.remove_selected_trip_legs_button = Button(self.master, text="Remove Selected",
+                                                       command=self.__remove_selected_trip_leg)
+        self.remove_selected_trip_legs_button.grid(row=8, column=2)
 
     def __remove_selected_trip_leg(self):
         for i in self.trip_legs_entry.curselection():
@@ -150,3 +163,21 @@ class AddNewTripGUI():
             trip_legs = [x for x in self.trip.trip_legs if self.trip_legs_entry.get(i) in x.destination][0]
             self.trip.trip_legs.remove(trip_legs)
 
+    def __add_new_coordinator_button(self):
+        self.add_new_coordinator_button = Button(self.master, text="Add New", command=self.__open_add_new_coordinator)
+        self.add_new_coordinator_button.grid(row=3, column=2)
+
+    def __open_add_new_coordinator(self):
+        self.add_new_coordinator_gui = AddNewCoordinatorGUI(self)
+
+    def __add_remove_coordinator_button(self):
+        self.remove_coordinator_button = Button(self.master, text="Remove Selected",
+                                                       command=self.__remove_selected_coordinator)
+        self.remove_coordinator_button.grid(row=4, column=2)
+
+    def __remove_selected_coordinator(self):
+        for i in self.coordinator_entry.curselection():
+            self.coordinator_entry.delete(i)
+            user = [x for x in self.trips_gui.trip_system.users if self.coordinator_entry.get(i) in x.name][0]
+            self.trip.coordinator = None
+            self.trips_gui.trip_system.users.remove(user)

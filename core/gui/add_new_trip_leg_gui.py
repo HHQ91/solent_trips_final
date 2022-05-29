@@ -47,4 +47,4 @@ class AddNewTripLegGUI:
         self.save_button.grid(row=6, column=1)
 
     # todo need to add the other fields
-    # todo should add a validtaion to the input also name should be a unique
+    # todo implement validation

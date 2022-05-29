@@ -1,4 +1,5 @@
-from tkinter import ttk, StringVar, Label, Button, Frame
+from tkinter import Label, Button
+from tkinter import messagebox
 from tkinter.ttk import Entry
 
 
@@ -14,8 +15,13 @@ class LoginGUI():
         self.__add_login_button()
 
     def __login(self):
-        print("LoginGui/__login(self)")
-        self.trip_system.logging_in(self.username_entry.get(), self.password_entry.get())
+        try:
+            if not self.username_entry.get() or not self.password_entry.get():
+                messagebox.showerror("Login Failed", "Please enter a valid data")
+            else:
+                self.trip_system.logging_in(self.username_entry.get(), self.password_entry.get())
+        except:
+            messagebox.showerror("Login Failed", "You enter a wrong credentials")
 
     def __add_username_label(self):
         self.username_label = Label()
