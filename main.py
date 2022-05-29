@@ -1,8 +1,6 @@
 from core.core import *
 
-x = Trip()
+trip_system = TripSystem()
 
-x.add_traveller("x")
-x.add_traveller("y")
 
-print(x.get_id())
+

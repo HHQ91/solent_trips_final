@@ -1,3 +1,7 @@
+from tkinter import Tk
+
+from core.gui.login_gui import LoginGUI
+from core.gui.trips_gui import TripsGUI
 from core.models.trip import Trip
 from core.models.user import User
 from core.types.role_types import RoleTypes
@@ -7,13 +11,21 @@ class TripSystem:
     __trips = []
     __users = []
     __logged_in_user = None
+    __app_name = "Trips Management System"
 
     def __init__(self):
         # add system users
-        self.__users.append(User("TripCoordinator", "12345", RoleTypes.coordinator))
-        self.__users.append(User("TripManager", "12345", RoleTypes.manager))
-        self.__users.append(User("TripAdmin", "12345", RoleTypes.administrator))
-        # log the user in
+        self.__users.append(User("coordinator", "12345", RoleTypes.coordinator))
+        self.__users.append(User("manager", "12345", RoleTypes.manager))
+        self.__users.append(User("admin", "12345", RoleTypes.administrator))
+        # initial the tkinter
+        self.root = Tk()
+        self.root.wm_title(self.__app_name)
+        # add the login gui
+        self.login_gui = LoginGUI(self.root, self)
+        # ---
+        self.root.mainloop()
+
 
     def get_trips(self):
         trips = []
@@ -62,9 +74,11 @@ class TripSystem:
                 self.__trips.remove(item)
 
     def logging_in(self, username, password):
-        for i, user in self.__users:
+        for user in self.__users:
             if user.get_name() == username and user.get_password() == password:
                 self.__logged_in_user = user
+                self.login_gui.__del__()
+                self.trips_gui = TripsGUI(self.root, self)
                 break
         # if logged-in user still null then throw an exception
         if self.__logged_in_user is None:
