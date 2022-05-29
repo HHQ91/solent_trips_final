@@ -108,7 +108,6 @@ class TripSystem:
         self.trips.append(demo_trip1)
         self.trips.append(demo_trip1)
         self.trips.append(demo_trip1)
-        #demo_trip2.name = "Trip to turkey Trip to turkey Trip to turkey"
-        #self.trips.append(demo_trip2)
+
 
 
