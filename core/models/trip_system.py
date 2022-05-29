@@ -100,14 +100,10 @@ class TripSystem:
         self.users.append(User("manager", "12345", RoleTypes.manager))
         self.users.append(User("a", "a", RoleTypes.administrator))
         # add demo trip
-        demo_trip1 = Trip("Trip to turkey", datetime.now(), DurationTypes.weekend, self.users[0], None, None)
-        demo_trip2 = Trip("Trip to turkey", datetime.now(), DurationTypes.weekend, self.users[0], None, None)
+        demo_trip1 = Trip("Trip to turkey 1", datetime.now(), DurationTypes.weekend, self.users[1], [], None)
+        demo_trip2 = Trip("Trip to turkey 2", datetime.now(), DurationTypes.weekend, self.users[2], [], None)
         self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
-        self.trips.append(demo_trip1)
+        self.trips.append(demo_trip2)
 
 
 

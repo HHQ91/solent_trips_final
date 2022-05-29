@@ -11,12 +11,22 @@ from core.types.duration_types import DurationTypes
 from core.types.role_types import RoleTypes
 
 
-class AddNewTripGUI():
-    def __init__(self, trips_gui):
+class TripGUI():
+    def __init__(self, trips_gui, trip = None):
         self.trips_gui = trips_gui
-        self.trip = Trip(None, None, None, None, [], [])
+        print(trip)
+        if trip is not None:
+            self.mode = "Edit"
+            self.trip = trip
+            if self.trip.travellers is None:
+                self.trip.travellers = []
+            if self.trip.trip_legs is None:
+                self.trip.trip_legs = []
+        else:
+            self.mode = "Add"
+            self.trip = Trip(None, None, None, None, [], [])
         self.master = Toplevel()
-        self.master.title("Add a trip")
+        self.master.title(f"{self.mode} a trip")
         self.__add_name_label()
         self.__add_name_entry()
         self.__add_duration_label()
@@ -57,8 +67,20 @@ class AddNewTripGUI():
         coordinator = [x for x in self.trips_gui.trip_system.users if
                        self.coordinator_entry.get(self.coordinator_entry.curselection()[0]) in x.name][0]
         self.trip.coordinator = coordinator
-        self.trips_gui.trip_system.trips.append(self.trip)
-        self.trips_gui.add_trip_info(self.trip)
+        if self.mode is "Edit":
+            for i, trip in enumerate(self.trips_gui.trip_system.trips):
+                if trip.id == self.trip.id:
+                    self.trips_gui.trip_system.trips[i].name = self.trip.name
+                    self.trips_gui.trip_system.trips[i].duration = self.trip.duration
+                    self.trips_gui.trip_system.trips[i].start_date = self.trip.start_date
+                    self.trips_gui.trip_system.trips[i].coordinator = self.trip.coordinator
+                    self.trips_gui.trip_system.trips[i].travellers = self.trip.travellers
+                    self.trips_gui.trip_system.trips[i].trip_legs = self.trip.trip_legs
+                    self.trips_gui.update_trip_info(self.trip)
+
+        else:
+            self.trips_gui.trip_system.trips.append(self.trip)
+            self.trips_gui.add_trip_info(self.trip)
         self.master.destroy()
 
     def __add_name_label(self):
@@ -69,6 +91,9 @@ class AddNewTripGUI():
     def __add_name_entry(self):
         self.name_entry = Entry(self.master)
         self.name_entry.grid(row=0, column=1, pady=5)
+        # for edit view mode
+        if self.trip.name is not None:
+            self.name_entry.insert(0, self.trip.name)
 
     def __add_duration_label(self):
         self.duration_label = Label(self.master)
@@ -77,8 +102,11 @@ class AddNewTripGUI():
 
     def __add_duration_entry(self):
         self.duration_entry = Combobox(self.master, values=(
-            DurationTypes.weekend.name, DurationTypes.one_day.name, DurationTypes.fortnight.name))
+            DurationTypes.one_day.name, DurationTypes.weekend.name, DurationTypes.fortnight.name))
         self.duration_entry.grid(row=1, column=1)
+        # for edit view mode
+        if self.trip.duration is not None:
+            self.duration_entry.current(self.trip.duration.value - 1)
 
     def __add_start_date_label(self):
         self.start_date_label = Label(self.master)
@@ -88,6 +116,9 @@ class AddNewTripGUI():
     def __add_start_date_entry(self):
         self.start_date_entry = DateEntry(self.master)
         self.start_date_entry.grid(row=2, column=1)
+        # for edit view mode
+        if self.trip.start_date is not None:
+            self.start_date_entry.insert(0, self.trip.start_date)
 
     def __add_save_button(self):
         self.save_button = Button(self.master, text="Save", command=self.__save)
@@ -104,6 +135,11 @@ class AddNewTripGUI():
         for user in self.trips_gui.trip_system.users:
             if user.role is RoleTypes.coordinator:
                 self.coordinator_entry.insert(END, user.name)
+        # for edit view mode
+        if self.trip.coordinator is not None:
+            for i in range(self.coordinator_entry.size()):
+                if self.coordinator_entry.get(i) in self.trip.coordinator.name:
+                    self.coordinator_entry.select_set(i)
 
     def __add_travellers_label(self):
         self.travellers_label = Label(self.master)
@@ -172,7 +208,7 @@ class AddNewTripGUI():
 
     def __add_remove_coordinator_button(self):
         self.remove_coordinator_button = Button(self.master, text="Remove Selected",
-                                                       command=self.__remove_selected_coordinator)
+                                                command=self.__remove_selected_coordinator)
         self.remove_coordinator_button.grid(row=4, column=2)
 
     def __remove_selected_coordinator(self):
@@ -181,3 +217,6 @@ class AddNewTripGUI():
             user = [x for x in self.trips_gui.trip_system.users if self.coordinator_entry.get(i) in x.name][0]
             self.trip.coordinator = None
             self.trips_gui.trip_system.users.remove(user)
+
+    def __del__(self):
+        self.trips_gui.selected_trip = None
