@@ -15,22 +15,19 @@ class TripSystem:
     logged_in_user = None
     app_name = "Trips Management System"
 
-    def __init__(self):
+    def __init__(self, run_gui=True):
         self.__add_demo_data()
-        # initial the tkinter
-        self.root = Tk()
-        self.root.wm_title(self.app_name)
-        # add the login gui
-        self.login_gui = LoginGUI(self.root, self)
-        # ---
-        self.root.mainloop()
+        self.run_gui = run_gui
+        self.__run_gui()
+
 
     def get_trips(self):
         trips = []
         # coordinator will see only the trip that assign to him
-        if self.logged_in_user == RoleTypes.coordinator:
-            for i, trip in self.trips:
-                trips.append(trip)
+        if self.logged_in_user.role == RoleTypes.coordinator:
+            for trip in self.trips:
+                if trip.coordinator.id == self.logged_in_user.id:
+                    trips.append(trip)
         else:
             trips = self.trips
         return trips
@@ -39,8 +36,9 @@ class TripSystem:
         for user in self.users:
             if user.name == username and user.password == password:
                 self.logged_in_user = user
-                self.login_gui.__del__()
-                self.trips_gui = TripsGUI(self.root, self)
+                if self.run_gui:
+                    self.login_gui.__del__()
+                    self.trips_gui = TripsGUI(self.root, self)
                 break
         # if logged-in user still null then throw an exception
         if self.logged_in_user is None:
@@ -68,10 +66,22 @@ class TripSystem:
         # add demo trip
         demo_trip1 = Trip("Trip to turkey 1", datetime.now(), DurationTypes.weekend)
         demo_trip1.assign_coordinator(self.users[0])
+
         demo_trip2 = Trip("Trip to turkey 2", datetime.now(), DurationTypes.weekend)
         demo_trip2.assign_coordinator(self.users[2])
+
         self.trips.append(demo_trip1)
         self.trips.append(demo_trip2)
+
+    def __run_gui(self):
+        if self.run_gui:
+            # initial the tkinter
+            self.root = Tk()
+            self.root.wm_title(self.app_name)
+            # add the login gui
+            self.login_gui = LoginGUI(self.root, self)
+            # ---
+            self.root.mainloop()
 
 
 
