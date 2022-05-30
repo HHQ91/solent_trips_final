@@ -17,13 +17,9 @@ class TripGUI():
         if trip is not None:
             self.mode = "Edit"
             self.trip = trip
-            if self.trip.travellers is None:
-                self.trip.travellers = []
-            if self.trip.trip_legs is None:
-                self.trip.trip_legs = []
         else:
             self.mode = "Add"
-            self.trip = Trip(None, None, None, None, [], [])
+            self.trip = Trip(None, None, None)
         self.master = Toplevel()
         self.master.title(f"{self.mode} a trip")
         self.__add_name_label()
@@ -76,16 +72,11 @@ class TripGUI():
             return messagebox.showerror("Add Failed", "Please select a valid coordinator")
         coordinator = [x for x in self.trips_gui.trip_system.users if
                        self.coordinator_entry.get(self.coordinator_entry.curselection()[0]) in x.name][0]
-        self.trip.coordinator = coordinator
+        self.trip.assign_coordinator(coordinator)
         if self.mode == "Edit":
             for i, trip in enumerate(self.trips_gui.trip_system.trips):
                 if trip.id == self.trip.id:
-                    self.trips_gui.trip_system.trips[i].name = self.trip.name
-                    self.trips_gui.trip_system.trips[i].duration = self.trip.duration
-                    self.trips_gui.trip_system.trips[i].start_date = self.trip.start_date
-                    self.trips_gui.trip_system.trips[i].coordinator = self.trip.coordinator
-                    self.trips_gui.trip_system.trips[i].travellers = self.trip.travellers
-                    self.trips_gui.trip_system.trips[i].trip_legs = self.trip.trip_legs
+                    self.trips_gui.trip_system.trips[i] = self.trip
                     self.trips_gui.update_trips_info()
 
         else:
@@ -167,7 +158,7 @@ class TripGUI():
         for i in self.coordinator_entry.curselection():
             self.coordinator_entry.delete(i)
             user = [x for x in self.trips_gui.trip_system.users if self.coordinator_entry.get(i) in x.name][0]
-            self.trip.coordinator = None
+            self.trip.assign_coordinator(None)
             self.trips_gui.trip_system.users.remove(user)
 
     def __edit_selected_coordinator_button(self):
@@ -218,7 +209,7 @@ class TripGUI():
         for i in self.travellers_entry.curselection():
             self.travellers_entry.delete(i)
             traveller = [x for x in self.trip.travellers if self.travellers_entry.get(i) in x.name][0]
-            self.trip.travellers.remove(traveller)
+            self.trip.remove_traveller(traveller.id)
 
     def __add_trip_legs_label(self):
         self.trip_legs_label = Label(self.master)

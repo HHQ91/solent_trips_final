@@ -6,7 +6,7 @@ from core.models.traveller import Traveller
 class AddNewTravellerGUI:
     def __init__(self, trip_gui):
         self.trip_gui = trip_gui
-        self.new_traveller = Traveller(None, None, None, None, [], [], [])
+        self.new_traveller = Traveller(None, None, None, None)
         self.master = Toplevel()
         self.master.title("Add a Traveller")
         self.__add_name_label()
@@ -20,7 +20,7 @@ class AddNewTravellerGUI:
         self.new_traveller.name = self.name_entry.get()
         self.new_traveller.address = self.address_entry.get()
 
-        self.trip_gui.trip.travellers.append(self.new_traveller)
+        self.trip_gui.trip.add_traveller(self.new_traveller)
         self.trip_gui.travellers_entry.insert(END, self.new_traveller.name)
         self.master.destroy()
 
