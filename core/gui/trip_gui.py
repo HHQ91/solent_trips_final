@@ -3,7 +3,7 @@ from tkinter.ttk import Entry, Combobox, Separator
 
 from tkcalendar import DateEntry
 
-from core.gui.add_new_coordinator_gui import AddNewCoordinatorGUI
+from core.gui.coordinator_gui import CoordinatorGUI
 from core.gui.add_new_traveller_gui import AddNewTravellerGUI
 from core.gui.add_new_trip_leg_gui import AddNewTripLegGUI
 from core.models.trip import Trip
@@ -14,7 +14,6 @@ from core.types.role_types import RoleTypes
 class TripGUI():
     def __init__(self, trips_gui, trip=None):
         self.trips_gui = trips_gui
-        print(trip)
         if trip is not None:
             self.mode = "Edit"
             self.trip = trip
@@ -65,7 +64,7 @@ class TripGUI():
         # save new trip
         self.trip.name = self.name_entry.get()
         if not self.trip.name:
-            return messagebox.showerror("Add Failed", "please enter a valid name")
+            return messagebox.showerror("Add Failed", "Please enter a valid name")
 
         self.trip.start_date = self.start_date_entry.get()
 
@@ -162,7 +161,7 @@ class TripGUI():
         self.remove_coordinator_button.grid(row=5, column=2)
 
     def __open_add_new_coordinator(self):
-        self.add_new_coordinator_gui = AddNewCoordinatorGUI(self)
+        self.add_new_coordinator_gui = CoordinatorGUI(self)
 
     def __remove_selected_coordinator(self):
         for i in self.coordinator_entry.curselection():
@@ -172,9 +171,21 @@ class TripGUI():
             self.trips_gui.trip_system.users.remove(user)
 
     def __edit_selected_coordinator_button(self):
-        self.edit_coordinator_button = Button(self.master, text="Edit Selected",
-                                              command=self.__open_add_new_coordinator)
+        self.edit_coordinator_button = Button(self.master, text="Edit Selected", command= self.__open_update_coordinator)
         self.edit_coordinator_button.grid(row=6, column=2)
+
+    def __open_update_coordinator(self):
+        print(self.coordinator_entry.curselection())
+        if len(self.coordinator_entry.curselection()) <= 0:
+            return messagebox.showwarning("Edit Warning", "Please select a element first")
+
+        coordinator = [x for x in self.trips_gui.trip_system.users if
+                       self.coordinator_entry.get(self.coordinator_entry.curselection()[0]) in x.name][0]
+        self.update_coordinator_gui = CoordinatorGUI(self, coordinator)
+
+    def update_coordinators_info(self):
+        self.coordinator_entry.destroy()
+        self.__add_coordinator_entry()
 
     def __add_travellers_label(self):
         self.travellers_label = Label(self.master)
