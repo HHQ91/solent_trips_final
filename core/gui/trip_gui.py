@@ -175,7 +175,6 @@ class TripGUI():
         self.edit_coordinator_button.grid(row=6, column=2)
 
     def __open_update_coordinator(self):
-        print(self.coordinator_entry.curselection())
         if len(self.coordinator_entry.curselection()) <= 0:
             return messagebox.showwarning("Edit Warning", "Please select a element first")
 
