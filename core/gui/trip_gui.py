@@ -43,14 +43,14 @@ class TripGUI():
         self.__add_travellers_entry()
         self.__add_new_traveller_button()
         self.__remove_selected_traveller_button()
-        self.__edit_selected_traveller_button()
+        #self.__edit_selected_traveller_button()
         self.__add_separator()
 
         self.__add_trip_legs_label()
         self.__add_trip_legs_entry()
         self.__add_new_trip_legs_button()
         self.__remove_selected_trip_legs_button()
-        self.__edit_selected_trip_legs_button()
+        #self.__edit_selected_trip_legs_button()
         self.__add_separator()
 
         self.__add_save_button()
