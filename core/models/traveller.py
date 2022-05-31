@@ -8,7 +8,7 @@ class Traveller:
     date_of_birth = None
     contact = None
     government_id = None
-    government_id_Type = None  # passport, driving license, national identity card, etc.
+    government_id_type = None  # passport, driving license, national identity card, etc.
     payments = []
 
     def __init__(self, name, address, date_of_birth, contact):
@@ -31,4 +31,4 @@ class Traveller:
 
     def add_government_id(self, id, type):
         self.government_id = id
-        self.government_id_Type = type
+        self.government_id_type = type

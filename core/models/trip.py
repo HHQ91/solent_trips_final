@@ -9,6 +9,7 @@ class Trip:
     coordinator = None
     travellers = []
     trip_legs = []
+    support_stuffs = []
 
     def __init__(self, name, start_date, duration):
         self.id = uuid.uuid4()
@@ -40,3 +41,14 @@ class Trip:
 
     def assign_trip_legs(self, trip_legs):
         self.trip_legs = trip_legs
+
+    def add_support_stuff(self, support_stuff):
+        self.support_stuffs.append(support_stuff)
+
+    def remove_support_stuff(self, id):
+        for i in self.support_stuffs:
+            if i.id is id:
+                self.support_stuffs.remove(i)
+
+    def assign_support_stuffs(self, support_stuffs):
+        self.support_stuffs = support_stuffs

@@ -11,7 +11,6 @@ from core.types.role_types import RoleTypes
 class TripSystem:
     trips = []
     users = []
-    travellers = []
     logged_in_user = None
     app_name = "Trips Management System"
 

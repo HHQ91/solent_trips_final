@@ -1,6 +1,7 @@
 from datetime import datetime
 from unittest import TestCase
 
+from core.models.support_stuff import SupportStuff
 from core.models.traveller import Traveller
 from core.models.trip import Trip
 from core.models.trip_leg import TripLeg
@@ -81,3 +82,35 @@ class TestTrip(TestCase):
         trip.assign_trip_legs([trip_leg1, trip_leg2])
         # assert
         self.assertEqual(len(trip.trip_legs), 2, "should have 2")
+
+    def test_add_support_stuff(self):
+        # arrange
+        trip = Trip("trip 1", datetime.now, DurationTypes.weekend)
+        support_stuff = SupportStuff("stuff 1")
+        # act
+        trip.add_support_stuff(support_stuff)
+        # assert
+        self.assertEqual(len(trip.support_stuffs), 1, "should have 1")
+        self.assertEqual(trip.support_stuffs[0], support_stuff, "should be the same as declared above")
+
+    def test_remove_support_stuff(self):
+        # arrange
+        trip = Trip("trip 1", datetime.now, DurationTypes.weekend)
+        support_stuff1 = SupportStuff("stuff 1")
+        support_stuff2 = SupportStuff("stuff 2")
+        trip.assign_support_stuffs([support_stuff1, support_stuff2])
+        # act
+        trip.remove_support_stuff(support_stuff1.id)
+        # assert
+        self.assertEqual(len(trip.support_stuffs), 1, "should have 1")
+
+    def test_assign_support_stuffs(self):
+        # arrange
+        trip = Trip("trip 1", datetime.now, DurationTypes.weekend)
+        support_stuff1 = SupportStuff("stuff 1")
+        support_stuff2 = SupportStuff("stuff 2")
+        # act
+        trip.assign_support_stuffs([support_stuff1, support_stuff2])
+        # assert
+        self.assertEqual(len(trip.support_stuffs), 2, "should have 2")
+
