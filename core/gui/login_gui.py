@@ -19,7 +19,7 @@ class LoginGUI():
             if not self.username_entry.get() or not self.password_entry.get():
                 messagebox.showerror("Login Failed", "Please enter a valid data")
             else:
-                self.trip_system.logging_in(self.username_entry.get(), self.password_entry.get())
+                self.trip_system.login(self.username_entry.get(), self.password_entry.get())
         except:
             messagebox.showerror("Login Failed", "You enter a wrong credentials")
 

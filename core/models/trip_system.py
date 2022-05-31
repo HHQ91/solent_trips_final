@@ -19,7 +19,6 @@ class TripSystem:
         self.run_gui = run_gui
         self.__run_gui()
 
-
     def get_trips(self):
         trips = []
         # coordinator will see only the trip that assign to him
@@ -31,7 +30,7 @@ class TripSystem:
             trips = self.trips
         return trips
 
-    def logging_in(self, username, password):
+    def login(self, username, password):
         for user in self.users:
             if user.name == username and user.password == password:
                 self.logged_in_user = user
@@ -44,16 +43,16 @@ class TripSystem:
             raise Exception("Please use a valid account")
 
     # logged in accepted role to perform the action
-    def accepted_role_or_throw_exception(self, accepted_role):
+    def is_accepted_role(self, accepted_role):
         if accepted_role is RoleTypes.coordinator:
-            return
+            return True
         if accepted_role is RoleTypes.manager and (self.logged_in_user.get_role() is RoleTypes.manager or
                                                    self.logged_in_user.get_role() is RoleTypes.administrator):
-            return
+            return True
         if accepted_role is RoleTypes.administrator and self.logged_in_user.get_role() is RoleTypes.administrator:
-            return
+            return True
 
-        raise Exception("Not allowed to perform this action")
+        raise False
 
     def __add_demo_data(self):
         # add system users
@@ -81,6 +80,3 @@ class TripSystem:
             self.login_gui = LoginGUI(self.root, self)
             # ---
             self.root.mainloop()
-
-
-
