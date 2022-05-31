@@ -29,7 +29,7 @@ class TripsGUI():
 
     def add_trip_info(self, trip):
         separator = Separator(orient='horizontal')
-        separator.grid(row=self.trip_info_row_index, sticky="ew", columnspan=2)
+        separator.grid(row=self.trip_info_row_index, sticky="ew", columnspan=3)
         trip_info = f"- Trip: {trip.name}"
         label = Label()
         label.grid(row=self.trip_info_row_index + 1, column=0, padx=10)
@@ -37,15 +37,23 @@ class TripsGUI():
         view_edit_button = Button(text="View/Edit", command=lambda: self.__open_update_trip(trip))
         view_edit_button.grid(row=self.trip_info_row_index + 1, column=1, padx=10)
 
-        self.trip_info_widgets.append([label, separator, view_edit_button])
+        delete_button = Button(text="delete", command=lambda: self.__delete_trip(trip))
+        delete_button.grid(row=self.trip_info_row_index + 1, column=2, padx=10)
+
+        self.trip_info_widgets.append([label, separator, view_edit_button, delete_button])
 
         self.trip_info_row_index = self.trip_info_row_index + 2
+
+    def __delete_trip(self, trip):
+        self.trip_system.trips.remove(trip)
+        self.update_trips_info()
 
     def __remove_all_trips_info(self):
         for i in self.trip_info_widgets:
             i[0].destroy()
             i[1].destroy()
             i[2].destroy()
+            i[3].destroy()
 
     def update_trips_info(self):
         self.__remove_all_trips_info()
