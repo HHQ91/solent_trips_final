@@ -5,6 +5,7 @@ from tkcalendar import DateEntry
 from core.gui.trip_gui import TripGUI
 from core.models.trip import Trip
 from core.types.duration_types import DurationTypes
+from core.types.role_types import RoleTypes
 
 
 class TripsGUI():
@@ -14,7 +15,8 @@ class TripsGUI():
         self.trip_system = trip_system
         self.master = master
         self.__add_header_label()
-        self.__add_new_trip_button()
+        if self.trip_system.is_accepted_role(RoleTypes.manager):
+            self.__add_new_trip_button()
         self.trip_info_widgets = []
         self.__add_trips_info()
 
@@ -37,10 +39,14 @@ class TripsGUI():
         view_edit_button = Button(text="View/Edit", command=lambda: self.__open_update_trip(trip))
         view_edit_button.grid(row=self.trip_info_row_index + 1, column=1, padx=10)
 
-        delete_button = Button(text="delete", command=lambda: self.__delete_trip(trip))
-        delete_button.grid(row=self.trip_info_row_index + 1, column=2, padx=10)
+        widgets_list = [label, separator, view_edit_button];
 
-        self.trip_info_widgets.append([label, separator, view_edit_button, delete_button])
+        if self.trip_system.is_accepted_role(RoleTypes.manager):
+            delete_button = Button(text="delete", command=lambda: self.__delete_trip(trip))
+            delete_button.grid(row=self.trip_info_row_index + 1, column=2, padx=10)
+            widgets_list.append(delete_button)
+
+        self.trip_info_widgets.append(widgets_list)
 
         self.trip_info_row_index = self.trip_info_row_index + 2
 
@@ -53,7 +59,8 @@ class TripsGUI():
             i[0].destroy()
             i[1].destroy()
             i[2].destroy()
-            i[3].destroy()
+            if len(i) > 4:
+                i[3].destroy()
 
     def update_trips_info(self):
         self.__remove_all_trips_info()

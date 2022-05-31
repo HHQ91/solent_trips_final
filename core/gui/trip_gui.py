@@ -30,14 +30,16 @@ class TripGUI():
         self.__add_start_date_entry()
         self.__add_separator()
 
-        self.__add_coordinator_label()
-        self.__add_coordinator_entry()
-        self.__add_coordinator_label()
-        self.__add_coordinator_entry()
-        self.__add_new_coordinator_button()
-        self.__add_remove_coordinator_button()
-        self.__edit_selected_coordinator_button()
-        self.__add_separator()
+        # when the user is coordinator so no need to the coordinator entry
+        if self.trips_gui.trip_system.is_accepted_role(RoleTypes.manager):
+            self.__add_coordinator_label()
+            self.__add_coordinator_entry()
+            self.__add_coordinator_label()
+            self.__add_coordinator_entry()
+            self.__add_new_coordinator_button()
+            self.__add_remove_coordinator_button()
+            self.__edit_selected_coordinator_button()
+            self.__add_separator()
 
         self.__add_travellers_label()
         self.__add_travellers_entry()
@@ -58,21 +60,22 @@ class TripGUI():
     def __save(self):
 
         # save new trip
-        self.trip.name = self.name_entry.get()
-        if not self.trip.name:
-            return messagebox.showerror("Add Failed", "Please enter a valid name")
+        if self.trips_gui.trip_system.is_accepted_role(RoleTypes.manager):
+            self.trip.name = self.name_entry.get()
+            if not self.trip.name:
+                return messagebox.showerror("Add Failed", "Please enter a valid name")
 
-        self.trip.start_date = self.start_date_entry.get()
+            self.trip.start_date = self.start_date_entry.get()
 
-        self.trip.duration = DurationTypes[self.duration_entry.get()]
-        if not self.trip.duration:
-            return messagebox.showerror("Add Failed", "Please select a valid duration")
-        # get coordinator
-        if len(self.coordinator_entry.curselection()) <= 0:
-            return messagebox.showerror("Add Failed", "Please select a valid coordinator")
-        coordinator = [x for x in self.trips_gui.trip_system.users if
-                       self.coordinator_entry.get(self.coordinator_entry.curselection()[0]) in x.name][0]
-        self.trip.assign_coordinator(coordinator)
+            self.trip.duration = DurationTypes[self.duration_entry.get()]
+            if not self.trip.duration:
+                return messagebox.showerror("Add Failed", "Please select a valid duration")
+            # get coordinator
+            if len(self.coordinator_entry.curselection()) <= 0:
+                return messagebox.showerror("Add Failed", "Please select a valid coordinator")
+            coordinator = [x for x in self.trips_gui.trip_system.users if
+                           self.coordinator_entry.get(self.coordinator_entry.curselection()[0]) in x.name][0]
+            self.trip.assign_coordinator(coordinator)
         if self.mode == "Edit":
             for i, trip in enumerate(self.trips_gui.trip_system.trips):
                 if trip.id == self.trip.id:
@@ -95,6 +98,8 @@ class TripGUI():
         # for edit view mode
         if self.trip.name is not None:
             self.name_entry.insert(0, self.trip.name)
+        self.name_entry.config(state= "disabled")
+
 
     def __add_duration_label(self):
         self.duration_label = Label(self.master)
@@ -108,6 +113,7 @@ class TripGUI():
         # for edit view mode
         if self.trip.duration is not None:
             self.duration_entry.current(self.trip.duration.value - 1)
+        self.duration_entry.config(state= "disabled")
 
     def __add_start_date_label(self):
         self.start_date_label = Label(self.master)
@@ -120,6 +126,7 @@ class TripGUI():
         # for edit view mode
         if self.trip.start_date is not None:
             self.start_date_entry.insert(0, self.trip.start_date)
+        self.start_date_entry.config(state= "disabled")
 
     def __add_save_button(self):
         self.save_button = Button(self.master, text="Save", command=self.__save)

@@ -37,26 +37,27 @@ class TripSystem:
                 if self.run_gui:
                     self.login_gui.__del__()
                     self.trips_gui = TripsGUI(self.root, self)
-                break
+                return
+
         # if logged-in user still null then throw an exception
         if self.logged_in_user is None:
             raise Exception("Please use a valid account")
 
     # logged in accepted role to perform the action
     def is_accepted_role(self, accepted_role):
-        if accepted_role is RoleTypes.coordinator:
+        if accepted_role == RoleTypes.coordinator:
             return True
-        if accepted_role is RoleTypes.manager and (self.logged_in_user.get_role() is RoleTypes.manager or
-                                                   self.logged_in_user.get_role() is RoleTypes.administrator):
+        if accepted_role == RoleTypes.manager and (self.logged_in_user.role == RoleTypes.manager or
+                                                   self.logged_in_user.role == RoleTypes.administrator):
             return True
-        if accepted_role is RoleTypes.administrator and self.logged_in_user.get_role() is RoleTypes.administrator:
+        if accepted_role == RoleTypes.administrator and self.logged_in_user.role == RoleTypes.administrator:
             return True
 
-        raise False
+        return False
 
     def __add_demo_data(self):
         # add system users
-        self.users.append(User("coordinator1", "12345", RoleTypes.coordinator))
+        self.users.append(User("c", "c", RoleTypes.coordinator))
         self.users.append(User("coordinator2", "12345", RoleTypes.coordinator))
         self.users.append(User("coordinator3", "12345", RoleTypes.coordinator))
         self.users.append(User("manager", "12345", RoleTypes.manager))
