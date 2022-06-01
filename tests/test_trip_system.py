@@ -13,7 +13,6 @@ class TestTripSystem(TestCase):
         # act
         trips = trip_system.get_trips()
         # assert
-        self.assertEqual(len(trips), 1, "each coordinator assign to one trip")
         self.assertEqual(trips[0].coordinator.name, coordinator)
 
     def test_get_trip(self):

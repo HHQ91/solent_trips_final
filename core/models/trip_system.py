@@ -57,7 +57,7 @@ class TripSystem:
 
     def __add_demo_data(self):
         # add system users
-        self.users.append(User("c", "c", RoleTypes.coordinator))
+        self.users.append(User("coordinator1", "12345", RoleTypes.coordinator))
         self.users.append(User("coordinator2", "12345", RoleTypes.coordinator))
         self.users.append(User("coordinator3", "12345", RoleTypes.coordinator))
         self.users.append(User("manager", "12345", RoleTypes.manager))
