@@ -98,7 +98,8 @@ class TripGUI():
         # for edit view mode
         if self.trip.name is not None:
             self.name_entry.insert(0, self.trip.name)
-        self.name_entry.config(state= "disabled")
+        if not self.trips_gui.trip_system.is_accepted_role(RoleTypes.manager):
+            self.name_entry.config(state= "disabled")
 
 
     def __add_duration_label(self):
@@ -113,7 +114,8 @@ class TripGUI():
         # for edit view mode
         if self.trip.duration is not None:
             self.duration_entry.current(self.trip.duration.value - 1)
-        self.duration_entry.config(state= "disabled")
+        if not self.trips_gui.trip_system.is_accepted_role(RoleTypes.manager):
+            self.duration_entry.config(state= "disabled")
 
     def __add_start_date_label(self):
         self.start_date_label = Label(self.master)
@@ -126,7 +128,8 @@ class TripGUI():
         # for edit view mode
         if self.trip.start_date is not None:
             self.start_date_entry.insert(0, self.trip.start_date)
-        self.start_date_entry.config(state= "disabled")
+        if not self.trips_gui.trip_system.is_accepted_role(RoleTypes.manager):
+            self.start_date_entry.config(state= "disabled")
 
     def __add_save_button(self):
         self.save_button = Button(self.master, text="Save", command=self.__save)
