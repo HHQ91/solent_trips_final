@@ -52,4 +52,4 @@ class TestTraveller(TestCase):
         traveller.add_government_id(gov_id, gov_id_type)
         # assert
         self.assertEqual(traveller.government_id, gov_id)
-        self.assertEqual(traveller.government_id_Type, gov_id_type)
+        self.assertEqual(traveller.government_id_type, gov_id_type)
